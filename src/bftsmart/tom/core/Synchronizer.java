@@ -439,7 +439,6 @@ public class Synchronizer {
     }
     // this method is called when a timeout occurs or when a STOP message is recevied
     private void startSynchronization(int nextReg) {
-
         boolean condition;
         ObjectOutputStream out = null;
         ByteArrayOutputStream bos = null;
@@ -533,6 +532,7 @@ public class Synchronizer {
             requestsTimer.setShortTimeout(-1);
             requestsTimer.startTimer();
 
+            logger.info("getNewLeader");
             //int leader = regency % this.reconfManager.getCurrentViewN(); // new leader
             int leader = lcManager.getNewLeader();
             int in = tom.getInExec(); // cid to execute

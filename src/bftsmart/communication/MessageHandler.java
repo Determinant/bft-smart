@@ -16,6 +16,7 @@ limitations under the License.
 package bftsmart.communication;
 
 import bftsmart.communication.server.ServerConnection;
+import bftsmart.communication.ServerCommunicationSystem.MsgCounter;
 import bftsmart.consensus.messages.MessageFactory;
 import bftsmart.consensus.messages.ConsensusMessage;
 import bftsmart.consensus.roles.Acceptor;
@@ -66,7 +67,7 @@ public class MessageHandler {
     }
 
     @SuppressWarnings("unchecked")
-    protected void processData(SystemMessage sm) {
+    protected void processData(SystemMessage sm, MsgCounter msgCount) {
         if (sm instanceof ConsensusMessage) {
             
             int myId = tomLayer.controller.getStaticConf().getProcessId();
@@ -116,7 +117,7 @@ public class MessageHandler {
             } else {
                 logger.warn("Discarding unauthenticated message from " + sm.getSender());
             }
-
+            msgCount.consensus++;
         } else {
         	if (tomLayer.controller.getStaticConf().getUseMACs() == 0 || sm.authenticated) {
 	            /*** This is Joao's code, related to leader change */
@@ -144,11 +145,11 @@ public class MessageHandler {
 	                if (lcMsg.TRIGGER_LC_LOCALLY) tomLayer.requestsTimer.run_lc_protocol();
 	                else tomLayer.getSynchronizer().deliverTimeoutRequest(lcMsg);
 	            /**************************************************************/
-	
+                    msgCount.lc++;
 	            } else if (sm instanceof ForwardedMessage) {
 	                TOMMessage request = ((ForwardedMessage) sm).getRequest();
 	                tomLayer.requestReceived(request);
-	
+                    msgCount.forward++;
 	            /** This is Joao's code, to handle state transfer */
 	            } else if (sm instanceof SMMessage) {
 	                SMMessage smsg = (SMMessage) sm;
@@ -171,6 +172,7 @@ public class MessageHandler {
 	                        break;
 	                }
 	            /******************************************************************/
+                    msgCount.sm++;
 	            } else {
 	            	logger.warn("UNKNOWN MESSAGE TYPE: " + sm);
 	            }

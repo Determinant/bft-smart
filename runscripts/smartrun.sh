@@ -1,3 +1,4 @@
+#!/bin/bash
 # Copyright (c) 2007-2013 Alysson Bessani, Eduardo Alchieri, Paulo Sousa, and the authors indicated in the @author tags
 #
 # Licensed under the Apache License, Version 2.0 (the "License");

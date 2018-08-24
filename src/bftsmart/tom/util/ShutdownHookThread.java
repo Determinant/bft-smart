@@ -19,6 +19,7 @@ import bftsmart.consensus.Consensus;
 import bftsmart.consensus.Epoch;
 import bftsmart.consensus.TimestampValuePair;
 import bftsmart.tom.core.TOMLayer;
+import bftsmart.communication.ServerCommunicationSystem.MsgCounter;
 import java.security.MessageDigest;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -32,11 +33,13 @@ public class ShutdownHookThread extends Thread {
 
     private final TOMLayer tomLayer;
     private final MessageDigest md;
+    private MsgCounter msgCount;
 
-    public ShutdownHookThread(TOMLayer tomLayer) {
+    public ShutdownHookThread(TOMLayer tomLayer, MsgCounter msgCount) {
 
         this.tomLayer = tomLayer;
         this.md = this.tomLayer.md;
+        this.msgCount = msgCount;
     }
 
     @Override
@@ -50,6 +53,10 @@ public class ShutdownHookThread extends Thread {
         Epoch e = null;
 
         buffer.append("\n---------- DEBUG INFO ----------\n");
+        buffer.append("\nConsensus Msg: " + msgCount.consensus);
+        buffer.append("\nLC Msg: " + msgCount.lc);
+        buffer.append("\nForward Msg: " + msgCount.forward);
+        buffer.append("\nSM Msg: " + msgCount.sm);
         buffer.append("\nCurrent time: " + sdf.format(new Date()));
         buffer.append("\nCurrent leader: " + tomLayer.execManager.getCurrentLeader());
         buffer.append("\nCurrent regency: " + tomLayer.getSynchronizer().getLCManager().getLastReg());
