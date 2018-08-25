@@ -50,7 +50,7 @@ public class Configuration {
     
     public static final String DEFAULT_HMAC = "HmacSHA512";
     public static final String DEFAULT_SECRETKEY = "PBEWithSHA1AndDES";
-    public static final String DEFAULT_SIGNATURE = "SHA512withRSA";
+    public static final String DEFAULT_SIGNATURE = "SHA512withECDSA";
     public static final String DEFAULT_HASH = "SHA-512";
             
     private String hmacAlgorithm;
@@ -154,7 +154,7 @@ public class Configuration {
                 DH_G = new BigInteger(s);
             }
             
-            if (keyLoader == null) keyLoader = new RSAKeyLoader(processId, TOMConfiguration.configHome, defaultKeys, signatureAlgorithm);
+            if (keyLoader == null) keyLoader = new ECDSAKeyLoader(processId, TOMConfiguration.configHome, defaultKeys, signatureAlgorithm);
             if (provider == null) provider = new BouncyCastleProvider();
             
             TOMUtil.init(provider, hmacAlgorithm, secretKeyAlgorithm, keyLoader.getSignatureAlgorithm(), hashAlgorithm);

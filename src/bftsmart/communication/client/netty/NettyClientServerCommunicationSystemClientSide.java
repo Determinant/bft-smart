@@ -102,7 +102,7 @@ public class NettyClientServerCommunicationSystemClientSide extends SimpleChanne
 
             //this.st = new Storage(BENCHMARK_PERIOD);
             this.rl = new ReentrantReadWriteLock();
-            signatureLength = TOMUtil.getSignatureSize(controller);
+            signatureLength = 0; //TOMUtil.getSignatureSize(controller);
 
             ChannelFuture future = null;
             int[] currV = controller.getCurrentViewProcesses();
@@ -401,47 +401,49 @@ public class NettyClientServerCommunicationSystemClientSide extends SimpleChanne
     }
 
     public void sign(TOMMessage sm) {
-        //serialize message
-        DataOutputStream dos = null;
-        byte[] data = null;
-        try {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            dos = new DataOutputStream(baos);
-            sm.wExternal(dos);
-            dos.flush();
-            data = baos.toByteArray();
-            sm.serializedMessage = data;
-        } catch (IOException ex) {
-            
-            logger.error("Failed to sign TOMMessage", ex);
-        }
+        byte[] data2 = new byte[0];
+        ////serialize message
+        //DataOutputStream dos = null;
+        //byte[] data = null;
+        //try {
+        //    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        //    dos = new DataOutputStream(baos);
+        //    sm.wExternal(dos);
+        //    dos.flush();
+        //    data = baos.toByteArray();
+        //    sm.serializedMessage = data;
+        //} catch (IOException ex) {
+        //    
+        //    logger.error("Failed to sign TOMMessage", ex);
+        //}
 
-        //******* EDUARDO BEGIN **************//
-        //produce signature
-        byte[] data2 = signMessage(controller.getStaticConf().getPrivateKey(), data);
-        //******* EDUARDO END **************//
+        ////******* EDUARDO BEGIN **************//
+        ////produce signature
+        //byte[] data2 = signMessage(controller.getStaticConf().getPrivateKey(), data);
+        ////******* EDUARDO END **************//
 
         sm.serializedMessageSignature = data2;
     }
 
     public byte[] signMessage(PrivateKey key, byte[] message) {
-        //long startTime = System.nanoTime();
-        try {
-            if (signatureEngine == null) {
-                    signatureEngine = TOMUtil.getSigEngine();
-            }
-            byte[] result = null;
+        return new byte[0];
+        ////long startTime = System.nanoTime();
+        //try {
+        //    if (signatureEngine == null) {
+        //            signatureEngine = TOMUtil.getSigEngine();
+        //    }
+        //    byte[] result = null;
 
-            signatureEngine.initSign(key);
-            signatureEngine.update(message);
-            result = signatureEngine.sign();
+        //    signatureEngine.initSign(key);
+        //    signatureEngine.update(message);
+        //    result = signatureEngine.sign();
 
-            //st.store(System.nanoTime() - startTime);
-            return result;
-        } catch (Exception e) {
-            logger.error("Failed to sign message",e);
-            return null;
-        }
+        //    //st.store(System.nanoTime() - startTime);
+        //    return result;
+        //} catch (Exception e) {
+        //    logger.error("Failed to sign message",e);
+        //    return null;
+        //}
     }
 
     @Override
