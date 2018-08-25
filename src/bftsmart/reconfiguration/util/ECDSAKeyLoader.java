@@ -30,7 +30,7 @@ public class ECDSAKeyLoader implements KeyLoader {
 
     private static String DEFAULT_UKEY = 
         "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEZbmaUJjW8rGElczT0qDj3ipX7ylK" +
-        "82u9OtaEb8DI/vfVE8ERoARni8Ug4Qh+sGlqYyapO62MS/8dmpGT1gPqcw==";
+        "82u9OtaEb8DI/VfVE8ERoARni8Ug4Qh+sGlqYyapO62MS/8dmpGT1gPqcw==";
 
     private static String DEFAULT_PKEY =
         "MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQg+U849sY3fwEtloGwKUhOf828rple" +
