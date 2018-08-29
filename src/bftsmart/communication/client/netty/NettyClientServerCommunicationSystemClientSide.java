@@ -401,26 +401,25 @@ public class NettyClientServerCommunicationSystemClientSide extends SimpleChanne
     }
 
     public void sign(TOMMessage sm) {
-        byte[] data2 = new byte[0];
-        ////serialize message
-        //DataOutputStream dos = null;
-        //byte[] data = null;
-        //try {
-        //    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        //    dos = new DataOutputStream(baos);
-        //    sm.wExternal(dos);
-        //    dos.flush();
-        //    data = baos.toByteArray();
-        //    sm.serializedMessage = data;
-        //} catch (IOException ex) {
-        //    
-        //    logger.error("Failed to sign TOMMessage", ex);
-        //}
+        //serialize message
+        DataOutputStream dos = null;
+        byte[] data = null;
+        try {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            dos = new DataOutputStream(baos);
+            sm.wExternal(dos);
+            dos.flush();
+            data = baos.toByteArray();
+            sm.serializedMessage = data;
+        } catch (IOException ex) {
+            
+            logger.error("Failed to sign TOMMessage", ex);
+        }
 
-        ////******* EDUARDO BEGIN **************//
-        ////produce signature
-        //byte[] data2 = signMessage(controller.getStaticConf().getPrivateKey(), data);
-        ////******* EDUARDO END **************//
+        //******* EDUARDO BEGIN **************//
+        //produce signature
+        byte[] data2 = signMessage(controller.getStaticConf().getPrivateKey(), data);
+        //******* EDUARDO END **************//
 
         sm.serializedMessageSignature = data2;
     }

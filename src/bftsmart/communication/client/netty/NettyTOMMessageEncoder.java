@@ -47,7 +47,7 @@ public class NettyTOMMessageEncoder extends MessageToByteEncoder<TOMMessage> {
         this.sessionTable = sessionTable;
         this.macLength = macLength;
         this.rl = rl;
-        this.signatureLength = signatureLength;
+        this.signatureLength = 0; //signatureLength;
         this.useMAC = useMAC;
     }
 

@@ -39,6 +39,9 @@ import bftsmart.reconfiguration.ServerViewController;
 import bftsmart.reconfiguration.VMMessage;
 import bftsmart.tom.ServiceReplica;
 import bftsmart.tom.util.TOMUtil;
+import bftsmart.communication.ServerCommunicationSystem.MsgCounter;
+import bftsmart.consensus.messages.ConsensusMessage;
+import bftsmart.tom.leaderchange.LCMessage;
 import java.math.BigInteger;
 import java.security.PrivateKey;
 import java.security.PublicKey;
@@ -82,7 +85,7 @@ public class ServerConnection {
     private boolean doWork = true;
 
     public ServerConnection(ServerViewController controller, Socket socket, int remoteId,
-            LinkedBlockingQueue<SystemMessage> inQueue, ServiceReplica replica) {
+            LinkedBlockingQueue<SystemMessage> inQueue, ServiceReplica replica, MsgCounter msgCount) {
 
         this.controller = controller;
 
@@ -134,9 +137,9 @@ public class ServerConnection {
         if (!this.controller.getStaticConf().isTheTTP()) {
             if (this.controller.getStaticConf().getTTPId() == remoteId) {
                 //Uma thread "diferente" para as msgs recebidas da TTP
-                new TTPReceiverThread(replica).start();
+                new TTPReceiverThread(replica, msgCount).start();
             } else {
-                new ReceiverThread().start();
+                new ReceiverThread(msgCount).start();
             }
         }
         //******* EDUARDO END **************//
@@ -475,9 +478,10 @@ public class ServerConnection {
      * Thread used to receive packets from the remote server.
      */
     protected class ReceiverThread extends Thread {
-
-        public ReceiverThread() {
+        private MsgCounter msgCount;
+        public ReceiverThread(MsgCounter msgCount) {
             super("Receiver for " + remoteId);
+            this.msgCount = msgCount;
         }
 
         @Override
@@ -518,6 +522,8 @@ public class ServerConnection {
                         if (result) {
                             SystemMessage sm = (SystemMessage) (new ObjectInputStream(new ByteArrayInputStream(data)).readObject());
                             sm.authenticated = (controller.getStaticConf().getUseMACs() == 1 && hasMAC == 1);
+                            if (sm instanceof ConsensusMessage || sm instanceof LCMessage)
+                                this.msgCount.nmac += receivedMac.length;
                             
                             if (sm.getSender() == remoteId) {
                                 if (!inQueue.offer(sm)) {
@@ -555,10 +561,12 @@ public class ServerConnection {
     protected class TTPReceiverThread extends Thread {
 
         private ServiceReplica replica;
+        private MsgCounter msgCount;
 
-        public TTPReceiverThread(ServiceReplica replica) {
+        public TTPReceiverThread(ServiceReplica replica, MsgCounter msgCount) {
             super("TTPReceiver for " + remoteId);
             this.replica = replica;
+            this.msgCount = msgCount;
         }
 
         @Override
@@ -599,6 +607,8 @@ public class ServerConnection {
 
                         if (result) {
                             SystemMessage sm = (SystemMessage) (new ObjectInputStream(new ByteArrayInputStream(data)).readObject());
+                            if (sm instanceof ConsensusMessage || sm instanceof LCMessage)
+                                this.msgCount.nmac += receivedMac.length;
 
                             if (sm.getSender() == remoteId) {
                                 //System.out.println("Mensagem recebia de: "+remoteId);
@@ -607,6 +617,7 @@ public class ServerConnection {
                                 System.out.println("(ReceiverThread.run) in queue full (message from " + remoteId + " discarded).");
                                 }*/
                                 this.replica.joinMsgReceived((VMMessage) sm);
+                                this.msgCount.vm++;
                             }
                         } else {
                             //TODO: violation of authentication... we should do something

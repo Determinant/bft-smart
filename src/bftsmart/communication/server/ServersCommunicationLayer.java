@@ -34,6 +34,7 @@ import bftsmart.communication.SystemMessage;
 import bftsmart.reconfiguration.ServerViewController;
 import bftsmart.tom.ServiceReplica;
 import bftsmart.tom.util.TOMUtil;
+import bftsmart.communication.ServerCommunicationSystem.MsgCounter;
 import java.net.InetAddress;
 import java.util.HashMap;
 
@@ -66,10 +67,12 @@ public class ServersCommunicationLayer extends Thread {
     private ServiceReplica replica;
     private SecretKey selfPwd;
     private static final String PASSWORD = "commsyst";
+    private MsgCounter msgCount;
 
     public ServersCommunicationLayer(ServerViewController controller,
-            LinkedBlockingQueue<SystemMessage> inQueue, ServiceReplica replica) throws Exception {
+            LinkedBlockingQueue<SystemMessage> inQueue, ServiceReplica replica, MsgCounter msgCount) throws Exception {
 
+        this.msgCount = msgCount;
         this.controller = controller;
         this.inQueue = inQueue;
         this.me = controller.getStaticConf().getProcessId();
@@ -173,7 +176,7 @@ public class ServersCommunicationLayer extends Thread {
         connectionsLock.lock();
         ServerConnection ret = this.connections.get(remoteId);
         if (ret == null) {
-            ret = new ServerConnection(controller, null, remoteId, this.inQueue, this.replica);
+            ret = new ServerConnection(controller, null, remoteId, this.inQueue, this.replica, this.msgCount);
             this.connections.put(remoteId, ret);
         }
         connectionsLock.unlock();
@@ -295,7 +298,7 @@ public class ServersCommunicationLayer extends Thread {
             if (this.connections.get(remoteId) == null) { //This must never happen!!!
                 //first time that this connection is being established
                 //System.out.println("THIS DOES NOT HAPPEN....."+remoteId);
-                this.connections.put(remoteId, new ServerConnection(controller, newSocket, remoteId, inQueue, replica));
+                this.connections.put(remoteId, new ServerConnection(controller, newSocket, remoteId, inQueue, replica, this.msgCount));
             } else {
                 //reconnection
                 this.connections.get(remoteId).reconnect(newSocket);

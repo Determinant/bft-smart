@@ -68,6 +68,12 @@ public class TOMUtil {
     private static String sigAlgorithm = Configuration.DEFAULT_SIGNATURE;
     private static String hashAlgorithm = Configuration.DEFAULT_HASH;
 
+    public static class SigCounter {
+        public long num = 0;
+        public long bytes = 0;
+    };
+    public static SigCounter sigCount = new SigCounter();
+
     public static void init(Provider provider, String hmacAlgorithm, String secretAlgorithm, String sigAlgorithm, String hashAlgorithm) {
      
         if (!TOMUtil.init) {
@@ -140,22 +146,21 @@ public class TOMUtil {
      * @return the signature
      */
     public static byte[] signMessage(PrivateKey key, byte[] message) {
-        return new byte[0];
-        //byte[] result = null;
-        //try {
-        //    
-        //    Signature signatureEngine = getSigEngine();
+        byte[] result = null;
+        try {
+            
+            Signature signatureEngine = getSigEngine();
 
-        //    signatureEngine.initSign(key);
+            signatureEngine.initSign(key);
 
-        //    signatureEngine.update(message);
+            signatureEngine.update(message);
 
-        //    result = signatureEngine.sign();
-        //} catch (Exception e) {
-        //    logger.error("Failed to sign message",e);
-        //}
-        ////logger.info("signed " + message.length + " " + result.length);
-        //return result;
+            result = signatureEngine.sign();
+        } catch (Exception e) {
+            logger.error("Failed to sign message",e);
+        }
+        //logger.info("signed " + message.length + " " + result.length);
+        return result;
     }
 
     /**
@@ -167,21 +172,20 @@ public class TOMUtil {
      * @return true if the signature is valid, false otherwise
      */
     public static boolean verifySignature(PublicKey key, byte[] message, byte[] signature) {
-        return true;
-        //boolean result = false;
-        //
-        ////logger.info("verify " + message.length + " " + signature.length);
-        //try {
-        //    Signature signatureEngine = getSigEngine();
+        boolean result = false;
+        
+        //logger.info("verify " + message.length + " " + signature.length);
+        try {
+            Signature signatureEngine = getSigEngine();
 
-        //    signatureEngine.initVerify(key);
+            signatureEngine.initVerify(key);
 
-        //    result = verifySignature(signatureEngine, message, signature);
-        //} catch (Exception e) {
-        //    logger.error("Failed to verify signature",e);
-        //}
+            result = verifySignature(signatureEngine, message, signature);
+        } catch (Exception e) {
+            logger.error("Failed to verify signature",e);
+        }
 
-        //return result;
+        return result;
     }
 
     /**
@@ -194,9 +198,10 @@ public class TOMUtil {
      * @return true if the signature is valid, false otherwise
      */
     public static boolean verifySignature(Signature initializedSignatureEngine, byte[] message, byte[] signature) throws SignatureException {
-        return true;
-        //initializedSignatureEngine.update(message);
-        //return initializedSignatureEngine.verify(signature);
+        sigCount.num++;
+        sigCount.bytes += signature.length;
+        initializedSignatureEngine.update(message);
+        return initializedSignatureEngine.verify(signature);
     }
 
     public static String byteArrayToString(byte[] b) {

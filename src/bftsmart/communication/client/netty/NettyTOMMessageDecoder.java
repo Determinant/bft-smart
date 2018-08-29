@@ -80,7 +80,7 @@ public class NettyTOMMessageDecoder extends ByteToMessageDecoder {
         this.controller = controller;
         this.firstTime = true;
         this.rl = rl;
-        this.signatureSize = signatureLength;
+        this.signatureSize = 0; //signatureLength;
         this.useMAC = useMAC;
         logger.debug("new NettyTOMMessageDecoder!!, isClient=" + isClient);
     }

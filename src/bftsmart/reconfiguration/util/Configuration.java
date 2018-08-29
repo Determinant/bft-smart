@@ -50,7 +50,7 @@ public class Configuration {
     
     public static final String DEFAULT_HMAC = "HmacSHA512";
     public static final String DEFAULT_SECRETKEY = "PBEWithSHA1AndDES";
-    public static final String DEFAULT_SIGNATURE = "SHA512withECDSA";
+    public static final String DEFAULT_SIGNATURE = "SHA256withECDSA";
     public static final String DEFAULT_HASH = "SHA-512";
             
     private String hmacAlgorithm;

@@ -55,8 +55,12 @@ public class ShutdownHookThread extends Thread {
         buffer.append("\n---------- DEBUG INFO ----------\n");
         buffer.append("\nConsensus Msg: " + msgCount.consensus);
         buffer.append("\nLC Msg: " + msgCount.lc);
+        buffer.append("\nVM Msg: " + msgCount.vm);
         buffer.append("\nForward Msg: " + msgCount.forward);
         buffer.append("\nSM Msg: " + msgCount.sm);
+        buffer.append("\nMAC bytes: " + msgCount.nmac);
+        buffer.append("\nSig: " + TOMUtil.sigCount.num);
+        buffer.append("\nSig bytes: " + TOMUtil.sigCount.bytes);
         buffer.append("\nCurrent time: " + sdf.format(new Date()));
         buffer.append("\nCurrent leader: " + tomLayer.execManager.getCurrentLeader());
         buffer.append("\nCurrent regency: " + tomLayer.getSynchronizer().getLCManager().getLastReg());

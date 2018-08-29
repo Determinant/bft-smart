@@ -1,3 +1,13 @@
+#!/bin/bash
+sig=true
+n="$1"
+v=($(seq 0 $((n - 1))))
+view_string="$(IFS=','; echo "${v[*]}")"
+IFS="$OIFS"
+use_sig=1
+use_mac=1
+
+cat > config/system.config <<EOF
 # Copyright (c) 2007-2013 Alysson Bessani, Eduardo Alchieri, Paulo Sousa, and the authors indicated in the @author tags
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -46,10 +56,10 @@ system.communication.bindaddress = auto
 ############################################
 
 #Number of servers in the group 
-system.servers.num = 16
+system.servers.num = $n
 
 #Maximum number of faulty replicas 
-system.servers.f = 5
+system.servers.f = $(( (n - 1) / 3 ))
 
 #Timeout to asking for a client request
 system.totalordermulticast.timeout = 2000
@@ -73,10 +83,10 @@ system.communication.inQueueSize = 500000
 system.communication.outQueueSize = 500000
 
 #Set to 1 if SMaRt should use signatures, set to 0 if otherwise
-system.communication.useSignatures = 1
+system.communication.useSignatures = $use_sig
 
 #Set to 1 if SMaRt should use MAC's, set to 0 if otherwise
-system.communication.useMACs = 1
+system.communication.useMACs = $use_mac
 
 #Print information about the replica when it is shutdown
 system.shutdownhook = true
@@ -124,10 +134,11 @@ system.totalordermulticast.sync_ckp = false
 
 #Replicas ID for the initial view, separated by a comma.
 # The number of replicas in this parameter should be equal to that specified in 'system.servers.num'
-system.initial.view = 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+system.initial.view = $view_string
 
 #The ID of the trust third party (TTP)
 system.ttp.id = 7002
 
 #This sets if the system will function in Byzantine or crash-only mode. Set to "true" to support Byzantine faults
 system.bft = true
+EOF
