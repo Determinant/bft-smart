@@ -44,7 +44,7 @@ system.servers.num = $n
 system.servers.f = $(( (n - 1) / 3 ))
 
 #Timeout to asking for a client request
-system.totalordermulticast.timeout = 2000
+system.totalordermulticast.timeout = 200000
 
 
 #Maximum batch size (in number of messages)
