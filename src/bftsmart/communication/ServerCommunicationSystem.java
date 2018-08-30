@@ -42,7 +42,7 @@ public class ServerCommunicationSystem extends Thread {
     private ServersCommunicationLayer serversConn;
     private CommunicationSystemServerSide clientsConn;
     private ServerViewController controller;
-    public class MsgCounter {
+    public static class MsgCounter {
         public long consensus = 0;
         public long lc = 0;
         public long vm = 0;
@@ -50,7 +50,7 @@ public class ServerCommunicationSystem extends Thread {
         public long sm = 0;
         public long nmac = 0;
     };
-    public MsgCounter msgCount = new MsgCounter();
+    public static MsgCounter msgCount = new MsgCounter();
 
     /**
      * Creates a new instance of ServerCommunicationSystem
@@ -68,7 +68,7 @@ public class ServerCommunicationSystem extends Thread {
 
         //serversConf.increasePortNumber();
 
-        serversConn = new ServersCommunicationLayer(controller, inQueue, replica, msgCount);
+        serversConn = new ServersCommunicationLayer(controller, inQueue, replica);
 
         //******* EDUARDO BEGIN **************//
        // if (manager.isInCurrentView() || manager.isInInitView()) {

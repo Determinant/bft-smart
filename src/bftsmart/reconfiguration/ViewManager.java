@@ -29,6 +29,7 @@ import java.util.logging.Logger;
 
 import bftsmart.communication.server.ServerConnection;
 import bftsmart.reconfiguration.views.View;
+import static bftsmart.communication.ServerCommunicationSystem.msgCount;
 
 /**
  *

@@ -40,7 +40,7 @@ import bftsmart.reconfiguration.VMMessage;
 import bftsmart.tom.ServiceReplica;
 import bftsmart.tom.util.Logger;
 import bftsmart.tom.util.TOMUtil;
-import bftsmart.communication.ServerCommunicationSystem.MsgCounter;
+import static bftsmart.communication.ServerCommunicationSystem.msgCount;
 import bftsmart.consensus.messages.ConsensusMessage;
 import bftsmart.tom.leaderchange.LCMessage;
 import java.math.BigInteger;
@@ -80,7 +80,7 @@ public class ServerConnection {
     private boolean doWork = true;
 
     public ServerConnection(ServerViewController controller, Socket socket, int remoteId,
-            LinkedBlockingQueue<SystemMessage> inQueue, ServiceReplica replica, MsgCounter msgCount) {
+            LinkedBlockingQueue<SystemMessage> inQueue, ServiceReplica replica) {
 
         this.controller = controller;
 
@@ -133,9 +133,9 @@ public class ServerConnection {
         if (!this.controller.getStaticConf().isTheTTP()) {
             if (this.controller.getStaticConf().getTTPId() == remoteId) {
                 //Uma thread "diferente" para as msgs recebidas da TTP
-                new TTPReceiverThread(replica, msgCount).start();
+                new TTPReceiverThread(replica).start();
             } else {
-                new ReceiverThread(msgCount).start();
+                new ReceiverThread().start();
             }
         }
         //******* EDUARDO END **************//
@@ -475,10 +475,8 @@ public class ServerConnection {
      */
     protected class ReceiverThread extends Thread {
 
-        private MsgCounter msgCount;
-        public ReceiverThread(MsgCounter msgCount) {
+        public ReceiverThread() {
             super("Receiver for " + remoteId);
-            this.msgCount = msgCount;
         }
 
         @Override
@@ -520,7 +518,7 @@ public class ServerConnection {
                             SystemMessage sm = (SystemMessage) (new ObjectInputStream(new ByteArrayInputStream(data)).readObject());
                             sm.authenticated = (controller.getStaticConf().getUseMACs() == 1 && hasMAC == 1);
                             if (sm instanceof ConsensusMessage || sm instanceof LCMessage)
-                                this.msgCount.nmac += receivedMac.length;
+                                msgCount.nmac += receivedMac.length;
                             
                             if (sm.getSender() == remoteId) {
                                 if (!inQueue.offer(sm)) {
@@ -559,12 +557,10 @@ public class ServerConnection {
     protected class TTPReceiverThread extends Thread {
 
         private ServiceReplica replica;
-        private MsgCounter msgCount;
 
-        public TTPReceiverThread(ServiceReplica replica, MsgCounter msgCount) {
+        public TTPReceiverThread(ServiceReplica replica) {
             super("TTPReceiver for " + remoteId);
             this.replica = replica;
-            this.msgCount = msgCount;
         }
 
         @Override
@@ -607,7 +603,7 @@ public class ServerConnection {
                         if (result) {
                             SystemMessage sm = (SystemMessage) (new ObjectInputStream(new ByteArrayInputStream(data)).readObject());
                             if (sm instanceof ConsensusMessage || sm instanceof LCMessage)
-                                this.msgCount.nmac += receivedMac.length;
+                                msgCount.nmac += receivedMac.length;
 
                             if (sm.getSender() == remoteId) {
                                 //System.out.println("Mensagem recebia de: "+remoteId);
@@ -616,7 +612,7 @@ public class ServerConnection {
                                 System.out.println("(ReceiverThread.run) in queue full (message from " + remoteId + " discarded).");
                                 }*/
                                 this.replica.joinMsgReceived((VMMessage) sm);
-                                this.msgCount.vm++;
+                                msgCount.vm++;
                             }
                         } else {
                             //TODO: violation of authentication... we should do something
