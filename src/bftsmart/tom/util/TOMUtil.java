@@ -147,6 +147,7 @@ public class TOMUtil {
         }
 
         lock.unlock();
+        //System.out.println("signed " + result.length + " bytes");
         return result;
     }
 
@@ -159,6 +160,7 @@ public class TOMUtil {
      * @return true if the signature is valid, false otherwise
      */
     public static boolean verifySignature(PublicKey key, byte[] message, byte[] signature) {
+        //System.out.println("verified " + signature.length + " bytes");
         lock.lock();
         boolean result = false;
         //long startTime = System.nanoTime();

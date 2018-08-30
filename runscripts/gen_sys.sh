@@ -28,7 +28,7 @@ cat > config/system.config <<EOF
 
 #HMAC algorithm used to authenticate messages between processes (HmacMD5 is the default value)
 #This parameter is not currently being used being used
-system.authentication.hmacAlgorithm = HmacSHA1
+#system.authentication.hmacAlgorithm = HmacSHA1
 
 #Specify if the communication system should use a thread to send data (true or false)
 system.communication.useSenderThread = true
