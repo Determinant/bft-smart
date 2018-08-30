@@ -44,6 +44,7 @@ import bftsmart.tom.server.RequestVerifier;
 import bftsmart.tom.util.BatchBuilder;
 import bftsmart.tom.util.BatchReader;
 import bftsmart.tom.util.Logger;
+import static bftsmart.tom.util.TOMUtil.sigCount;
 
 /**
  * This class implements the state machine replication protocol described in
@@ -194,6 +195,8 @@ public final class TOMLayer extends Thread implements RequestReceiver {
      * @return True if the signature is valid, false otherwise
      */
     public boolean verifySignature(SignedObject so, int sender) {
+        sigCount.num.getAndIncrement();
+        sigCount.bytes.getAndAdd(so.getSignature().length);
         try {
             return so.verify(controller.getStaticConf().getRSAPublicKey(sender), engine);
         } catch (Exception e) {

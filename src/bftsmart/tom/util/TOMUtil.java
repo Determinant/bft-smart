@@ -28,6 +28,7 @@ import java.security.Signature;
 import java.security.SignatureException;
 import java.util.Arrays;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.atomic.AtomicLong;
 
 import bftsmart.reconfiguration.ViewController;
 
@@ -65,8 +66,8 @@ public class TOMUtil {
     //private static Storage st = new Storage(BENCHMARK_PERIOD);
     //private static int count=0;
     public static class SigCounter {
-        public long num = 0;
-        public long bytes = 0;
+        public AtomicLong num = new AtomicLong(0);
+        public AtomicLong bytes = new AtomicLong(0);
     };
     public static SigCounter sigCount = new SigCounter();
 
@@ -206,8 +207,8 @@ public class TOMUtil {
      * @return true if the signature is valid, false otherwise
      */
     public static boolean verifySignature(Signature initializedSignatureEngine, byte[] message, byte[] signature) throws SignatureException {
-        sigCount.num++;
-        sigCount.bytes += signature.length;
+        sigCount.num.getAndIncrement();
+        sigCount.bytes.getAndAdd(signature.length);
         //TODO: limit the amount of parallelization we can do to save some cores for other tasks
         //maybe we can use a semaphore here initialized with the maximum number of parallel verifications:
         //sem.acquire()
