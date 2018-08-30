@@ -518,7 +518,7 @@ public class ServerConnection {
                             SystemMessage sm = (SystemMessage) (new ObjectInputStream(new ByteArrayInputStream(data)).readObject());
                             sm.authenticated = (controller.getStaticConf().getUseMACs() == 1 && hasMAC == 1);
                             if (sm instanceof ConsensusMessage || sm instanceof LCMessage)
-                                msgCount.nmac += receivedMac.length;
+                                msgCount.nmac.getAndAdd(receivedMac.length);
                             
                             if (sm.getSender() == remoteId) {
                                 if (!inQueue.offer(sm)) {
@@ -603,7 +603,7 @@ public class ServerConnection {
                         if (result) {
                             SystemMessage sm = (SystemMessage) (new ObjectInputStream(new ByteArrayInputStream(data)).readObject());
                             if (sm instanceof ConsensusMessage || sm instanceof LCMessage)
-                                msgCount.nmac += receivedMac.length;
+                                msgCount.nmac.getAndAdd(receivedMac.length);
 
                             if (sm.getSender() == remoteId) {
                                 //System.out.println("Mensagem recebia de: "+remoteId);
@@ -612,7 +612,7 @@ public class ServerConnection {
                                 System.out.println("(ReceiverThread.run) in queue full (message from " + remoteId + " discarded).");
                                 }*/
                                 this.replica.joinMsgReceived((VMMessage) sm);
-                                msgCount.vm++;
+                                msgCount.vm.getAndIncrement();
                             }
                         } else {
                             //TODO: violation of authentication... we should do something

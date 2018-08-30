@@ -117,7 +117,7 @@ public class MessageHandler {
                 System.out.println("(MessageHandler.processData) Discarding unauthenticated message from " + sm.getSender());
                 Logger.println("(MessageHandler.processData) Discarding unauthenticated message from " + sm.getSender());
             }
-            msgCount.consensus++;
+            msgCount.consensus.getAndIncrement();
         } else {
         	if (tomLayer.controller.getStaticConf().getUseMACs() == 0 || sm.authenticated) {
 	            /*** This is Joao's code, related to leader change */
@@ -145,11 +145,11 @@ public class MessageHandler {
 	                if (lcMsg.TRIGGER_LC_LOCALLY) tomLayer.requestsTimer.run_lc_protocol();
 	                else tomLayer.getSynchronizer().deliverTimeoutRequest(lcMsg);
 	            /**************************************************************/
-                    msgCount.lc++;
+                    msgCount.lc.getAndIncrement();
 	            } else if (sm instanceof ForwardedMessage) {
 	                TOMMessage request = ((ForwardedMessage) sm).getRequest();
 	                tomLayer.requestReceived(request);
-                    msgCount.forward++;
+                    msgCount.forward.getAndIncrement();
 	            /** This is Joao's code, to handle state transfer */
 	            } else if (sm instanceof SMMessage) {
 	                SMMessage smsg = (SMMessage) sm;
@@ -172,7 +172,7 @@ public class MessageHandler {
 	                        break;
 	                }
 	            /******************************************************************/
-                    msgCount.sm++;
+                    msgCount.sm.getAndIncrement();
 	            } else {
 	            	System.out.println("UNKNOWN MESSAGE TYPE: " + sm);
 	            }

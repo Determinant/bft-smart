@@ -36,7 +36,6 @@ import java.util.logging.Logger;
 import bftsmart.communication.SystemMessage;
 import bftsmart.reconfiguration.ServerViewController;
 import bftsmart.tom.ServiceReplica;
-import static bftsmart.communication.ServerCommunicationSystem.msgCount;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;

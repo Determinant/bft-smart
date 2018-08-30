@@ -18,6 +18,7 @@ package bftsmart.communication;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicLong;
 
 import bftsmart.communication.client.CommunicationSystemServerSide;
 import bftsmart.communication.client.CommunicationSystemServerSideFactory;
@@ -43,12 +44,12 @@ public class ServerCommunicationSystem extends Thread {
     private CommunicationSystemServerSide clientsConn;
     private ServerViewController controller;
     public static class MsgCounter {
-        public long consensus = 0;
-        public long lc = 0;
-        public long vm = 0;
-        public long forward = 0;
-        public long sm = 0;
-        public long nmac = 0;
+        public AtomicLong consensus = new AtomicLong(0);
+        public AtomicLong lc = new AtomicLong(0);
+        public AtomicLong vm = new AtomicLong(0);
+        public AtomicLong forward = new AtomicLong(0);
+        public AtomicLong sm = new AtomicLong(0);
+        public AtomicLong nmac = new AtomicLong(0);
     };
     public static MsgCounter msgCount = new MsgCounter();
 
