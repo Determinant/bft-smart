@@ -548,6 +548,7 @@ public class Synchronizer {
             requestsTimer.setShortTimeout(-1);
             requestsTimer.startTimer();
 
+            Logger.println("getNewLeader");
             //int leader = regency % this.reconfManager.getCurrentViewN(); // new leader
             int leader = lcManager.getNewLeader();
             int in = tom.getInExec(); // cid to execute

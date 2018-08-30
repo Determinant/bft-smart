@@ -459,7 +459,7 @@ public class ServiceReplica {
         acceptor.setTOMLayer(tomLayer);
 
         if (SVController.getStaticConf().isShutdownHookEnabled()) {
-            Runtime.getRuntime().addShutdownHook(new ShutdownHookThread(tomLayer));
+            Runtime.getRuntime().addShutdownHook(new ShutdownHookThread(tomLayer, cs.msgCount));
         }
         tomLayer.start(); // start the layer execution
         tomStackCreated = true;

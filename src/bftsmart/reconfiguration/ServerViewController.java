@@ -55,7 +55,7 @@ public class ServerViewController extends ViewController {
 
     public ServerViewController(int procId, String configHome) {
         super(procId, configHome);
-        View cv = getViewStore().readView();
+        View cv = null; //getViewStore().readView();
         if(cv == null){
             
             System.out.println("#Creating current view from configuration file");

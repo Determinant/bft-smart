@@ -86,7 +86,7 @@ public class NettyClientServerCommunicationSystemClientSide extends SimpleChanne
 			this.controller = controller;
 			//this.st = new Storage(BENCHMARK_PERIOD);
 			this.rl = new ReentrantReadWriteLock();
-			signatureLength = TOMUtil.getSignatureSize(controller);
+			signatureLength = 0; //TOMUtil.getSignatureSize(controller);
 
 			ChannelFuture future = null;
 			int[] currV = controller.getCurrentViewProcesses();
@@ -397,23 +397,24 @@ public class NettyClientServerCommunicationSystemClientSide extends SimpleChanne
 	}
 
 	public byte[] signMessage(PrivateKey key, byte[] message) {
-		//long startTime = System.nanoTime();
-		try {
-			if (signatureEngine == null) {
-				signatureEngine = Signature.getInstance("SHA1withRSA");
-			}
-			byte[] result = null;
+        return new byte[0];
+		////long startTime = System.nanoTime();
+		//try {
+		//	if (signatureEngine == null) {
+		//		signatureEngine = Signature.getInstance("SHA1withRSA");
+		//	}
+		//	byte[] result = null;
 
-			signatureEngine.initSign(key);
-			signatureEngine.update(message);
-			result = signatureEngine.sign();
+		//	signatureEngine.initSign(key);
+		//	signatureEngine.update(message);
+		//	result = signatureEngine.sign();
 
-			//st.store(System.nanoTime() - startTime);
-			return result;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
+		//	//st.store(System.nanoTime() - startTime);
+		//	return result;
+		//} catch (Exception e) {
+		//	e.printStackTrace();
+		//	return null;
+		//}
 	}
 
 	@Override

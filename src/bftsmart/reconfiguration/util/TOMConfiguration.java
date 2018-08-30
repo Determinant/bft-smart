@@ -37,7 +37,7 @@ public class TOMConfiguration extends Configuration {
     protected int outQueueSize;
     protected boolean shutdownHookEnabled;
     protected boolean useSenderThread;
-    protected RSAKeyLoader rsaLoader;
+    protected ECDSAKeyLoader rsaLoader;
     private int debug;
     private int numNIOThreads;
     private int useMACs;
@@ -323,7 +323,7 @@ public class TOMConfiguration extends Configuration {
                 numRepliers = Integer.parseInt(s);
             }
             
-            rsaLoader = new RSAKeyLoader(processId, TOMConfiguration.configHome);
+            rsaLoader = new ECDSAKeyLoader(processId, TOMConfiguration.configHome);
         } catch (Exception e) {
             e.printStackTrace(System.err);
         }

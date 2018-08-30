@@ -79,7 +79,7 @@ public class NettyTOMMessageDecoder extends ByteToMessageDecoder {
         this.controller = controller;
         this.firstTime = true;
         this.rl = rl;
-        this.signatureSize = signatureLength;
+        this.signatureSize = 0; //signatureLength;
         this.useMAC = useMAC;
         bftsmart.tom.util.Logger.println("new NettyTOMMessageDecoder!!, isClient=" + isClient);
     }
