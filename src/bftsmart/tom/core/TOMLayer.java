@@ -138,7 +138,7 @@ public final class TOMLayer extends Thread implements RequestReceiver {
         }
 
         try {
-            this.engine = Signature.getInstance("SHA1withRSA");
+            this.engine = Signature.getInstance("SHA256withECDSA");
         } catch (Exception e) {
             e.printStackTrace(System.err);
         }
