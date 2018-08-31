@@ -154,17 +154,17 @@ public class Synchronizer {
                     System.out.println("(Synchronizer.triggerTimeout) Strange... did not include any request in my STOP message for regency " + regency);
                 }
 
-                byte[] payload = bos.toByteArray();
-
                 out.flush();
                 bos.flush();
+
+                byte[] payload = bos.toByteArray();
 
                 out.close();
                 bos.close();
 
                 // send STOP-message                
                 System.out.println("(Synchronizer.triggerTimeout) sending STOP message to install regency " + regency + " with " + (messages != null ? messages.size() : 0) + " request(s) to relay");
-                
+
                 LCMessage stop = new LCMessage(this.controller.getStaticConf().getProcessId(), TOMUtil.STOP, regency, payload);
                 requestsTimer.setSTOP(regency, stop); // make replica re-transmit the stop message until a new regency is installed
                 communication.send(this.controller.getCurrentViewOtherAcceptors(), stop);
@@ -846,7 +846,7 @@ public class Synchronizer {
                     Logger.println("(Synchronizer.deliverTimeoutRequest) received regency change request");
 
                     TOMMessage[] requests = deserializeTOMMessages(msg.getPayload());
-
+                    if (requests != null)
                     // store requests that came with the STOP message
                     lcManager.addRequestsFromSTOP(requests);
 

@@ -87,6 +87,8 @@ public class ServiceReplica {
     private Replier replier = null;
     private RequestVerifier verifier = null;
 
+    private long execCount = 0;
+
     /**
      * Constructor
      *
@@ -401,6 +403,13 @@ public class ServiceReplica {
             }
             //DEBUG
             bftsmart.tom.util.Logger.println("BATCHEXECUTOR END");
+            int vcFrequency = SVController.getStaticConf().getVCFrequency();
+            if (vcFrequency > 0 && ++execCount == vcFrequency)
+            {
+                System.out.println("force a view change!");
+                execCount = 0;
+                tomLayer.requestsTimer.run_lc_protocol_();
+            }
         }
     }
 

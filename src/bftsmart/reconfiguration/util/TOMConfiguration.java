@@ -56,6 +56,7 @@ public class TOMConfiguration extends Configuration {
 	private boolean syncCkp;
     private boolean isBFT;
     private int numRepliers;
+    private int vcFrequency;
     
     /** Creates a new instance of TOMConfiguration */
     public TOMConfiguration(int processId) {
@@ -322,6 +323,13 @@ public class TOMConfiguration extends Configuration {
             } else {
                 numRepliers = Integer.parseInt(s);
             }
+
+            s = (String) configs.remove("system.vc_freq");
+            if (s == null) {
+                vcFrequency = -1;
+            } else {
+                vcFrequency = Integer.parseInt(s);
+            }
             
             rsaLoader = new ECDSAKeyLoader(processId, TOMConfiguration.configHome);
         } catch (Exception e) {
@@ -512,5 +520,9 @@ public class TOMConfiguration extends Configuration {
 
     public int getNumRepliers() {
         return numRepliers;
+    }
+
+    public int getVCFrequency() {
+        return vcFrequency;
     }
 }

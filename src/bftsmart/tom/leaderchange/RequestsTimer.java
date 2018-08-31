@@ -145,6 +145,17 @@ public class RequestsTimer {
         }
         rwLock.writeLock().unlock();
     }
+
+    public void run_lc_protocol_() {
+        LinkedList<TOMMessage> pendingRequests = new LinkedList<TOMMessage>();
+        rwLock.readLock().lock();
+        for (Iterator<TOMMessage> i = watched.iterator(); i.hasNext();) {
+            TOMMessage request = i.next();
+            pendingRequests.add(request);
+        }
+        rwLock.readLock().unlock();
+        tomLayer.getSynchronizer().triggerTimeout(pendingRequests);
+    }
     
     public void run_lc_protocol() {
             
