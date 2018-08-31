@@ -22,7 +22,7 @@ import bftsmart.consensus.Epoch;
 import bftsmart.consensus.TimestampValuePair;
 import bftsmart.consensus.roles.Acceptor;
 import bftsmart.tom.core.TOMLayer;
-import bftsmart.communication.ServerCommunicationSystem.MsgCounter;
+import static bftsmart.communication.ServerCommunicationSystem.msgCount;
 import java.security.MessageDigest;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -35,13 +35,11 @@ public class ShutdownHookThread extends Thread {
 
     private final TOMLayer tomLayer;
     private final MessageDigest md;
-    private MsgCounter msgCount;
 
-    public ShutdownHookThread(TOMLayer tomLayer, MsgCounter msgCount) {
+    public ShutdownHookThread(TOMLayer tomLayer) {
 
         this.tomLayer = tomLayer;
         this.md = this.tomLayer.md;
-        this.msgCount = msgCount;
     }
 
     @Override
@@ -60,6 +58,7 @@ public class ShutdownHookThread extends Thread {
         buffer.append("\nVM Msg: " + msgCount.vm);
         buffer.append("\nForward Msg: " + msgCount.forward);
         buffer.append("\nSM Msg: " + msgCount.sm);
+        buffer.append("\nMAC: " + msgCount.mac);
         buffer.append("\nMAC bytes: " + msgCount.nmac);
         buffer.append("\nSig: " + TOMUtil.sigCount.num);
         buffer.append("\nSig bytes: " + TOMUtil.sigCount.bytes);

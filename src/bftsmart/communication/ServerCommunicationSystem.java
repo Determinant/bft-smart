@@ -50,6 +50,7 @@ public class ServerCommunicationSystem extends Thread {
         public AtomicLong forward = new AtomicLong(0);
         public AtomicLong sm = new AtomicLong(0);
         public AtomicLong nmac = new AtomicLong(0);
+        public AtomicLong mac = new AtomicLong(0);
     };
     public static MsgCounter msgCount = new MsgCounter();
 
@@ -125,7 +126,7 @@ public class ServerCommunicationSystem extends Thread {
 
                 if (sm != null) {
                     Logger.println("<-------receiving---------- " + sm);
-                    messageHandler.processData(sm, msgCount);
+                    messageHandler.processData(sm);
                     count++;
                 } else {                
                     messageHandler.verifyPending();               

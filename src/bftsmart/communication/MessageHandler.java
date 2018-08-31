@@ -16,7 +16,6 @@ limitations under the License.
 package bftsmart.communication;
 
 import bftsmart.communication.server.ServerConnection;
-import bftsmart.communication.ServerCommunicationSystem.MsgCounter;
 import bftsmart.consensus.messages.MessageFactory;
 import bftsmart.consensus.messages.ConsensusMessage;
 import bftsmart.consensus.roles.Acceptor;
@@ -27,6 +26,7 @@ import bftsmart.tom.core.messages.ForwardedMessage;
 import bftsmart.tom.leaderchange.LCMessage;
 import bftsmart.tom.util.Logger;
 import bftsmart.tom.util.TOMUtil;
+import static bftsmart.communication.ServerCommunicationSystem.msgCount;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -65,18 +65,17 @@ public class MessageHandler {
     }
 
     @SuppressWarnings("unchecked")
-    protected void processData(SystemMessage sm, MsgCounter msgCount) {
+    protected void processData(SystemMessage sm) {
         if (sm instanceof ConsensusMessage) {
-            
             int myId = tomLayer.controller.getStaticConf().getProcessId();
             
             ConsensusMessage consMsg = (ConsensusMessage) sm;
 
             if (tomLayer.controller.getStaticConf().getUseMACs() == 0 || consMsg.authenticated || consMsg.getSender() == myId) acceptor.deliver(consMsg);
             else if (consMsg.getType() == MessageFactory.ACCEPT && consMsg.getProof() != null) {
-                                        
                 //We are going to verify the MAC vector at the algorithm level
                 HashMap<Integer, byte[]> macVector = (HashMap<Integer, byte[]>) consMsg.getProof();
+                msgCount.mac.getAndAdd(macVector.size());
                                
                 byte[] recvMAC = macVector.get(myId);
                 

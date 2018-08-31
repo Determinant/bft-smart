@@ -25,6 +25,7 @@ import bftsmart.tom.util.BatchBuilder;
 import bftsmart.tom.util.BatchReader;
 import bftsmart.tom.util.Logger;
 import bftsmart.tom.util.TOMUtil;
+import static bftsmart.communication.ServerCommunicationSystem.msgCount;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -242,6 +243,7 @@ public class Synchronizer {
 
                 lastValue = (byte[]) ois.readObject();
                 proof = (Set<ConsensusMessage>) ois.readObject();
+                msgCount.mac.getAndAdd(proof.size());
 
                 //TODO: Proof is missing!
             }
@@ -299,6 +301,7 @@ public class Synchronizer {
 
             lastHighestCID = (CertifiedDecision) ois.readObject();
             signedCollects = (HashSet<SignedObject>) ois.readObject();
+            msgCount.mac.getAndAdd(signedCollects.size());
             propose = (byte[]) ois.readObject();
             batchSize = ois.readInt();
 
