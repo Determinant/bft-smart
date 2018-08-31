@@ -28,6 +28,7 @@ import bftsmart.reconfiguration.ServerViewController;
 import bftsmart.tom.core.TOMLayer;
 import bftsmart.tom.core.messages.TOMMessage;
 import bftsmart.tom.util.TOMUtil;
+import bftsmart.tom.core.Synchronizer;
 import java.util.Hashtable;
 import java.util.Set;
 
@@ -154,7 +155,9 @@ public class RequestsTimer {
             pendingRequests.add(request);
         }
         rwLock.readLock().unlock();
-        tomLayer.getSynchronizer().triggerTimeout(pendingRequests);
+        Synchronizer s = tomLayer.getSynchronizer();
+        s.getLCManager().setCurrentRequestTimedOut(pendingRequests);
+        s.triggerTimeout(pendingRequests);
     }
     
     public void run_lc_protocol() {
