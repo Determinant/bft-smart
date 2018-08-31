@@ -155,8 +155,9 @@ public class RequestsTimer {
             pendingRequests.add(request);
         }
         rwLock.readLock().unlock();
+
         Synchronizer s = tomLayer.getSynchronizer();
-        s.getLCManager().setCurrentRequestTimedOut(pendingRequests);
+        //s.getLCManager().setCurrentRequestTimedOut(pendingRequests);
         s.triggerTimeout(pendingRequests);
     }
     

@@ -370,6 +370,9 @@ public class Synchronizer {
                 BatchReader batchReader = new BatchReader(temp,
                         controller.getStaticConf().getUseSignatures() == 1);
                 requests = batchReader.deserialiseRequests(controller);
+            } else {
+                
+                requests = new TOMMessage[0];
             }
 
             ois.close();
@@ -1081,8 +1084,11 @@ public class Synchronizer {
         // install proof of the last decided consensus
         cons = execManager.getConsensus(lastHighestCID.getCID());
         e = null;
+                
+        Set<ConsensusMessage> consMsgs = lastHighestCID.getConsMessages();
+        if (consMsgs == null) consMsgs = new HashSet();
         
-        for (ConsensusMessage cm : lastHighestCID.getConsMessages()) {
+        for (ConsensusMessage cm : consMsgs) {
             
             if (e == null) e = cons.getEpoch(cm.getEpoch(), true, controller);
             if (e.getTimestamp() != cm.getEpoch()) {
