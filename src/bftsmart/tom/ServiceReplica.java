@@ -267,10 +267,11 @@ public class ServiceReplica {
         boolean noop = true;
 
         for (TOMMessage[] requestsFromConsensus : requests) {
-
+            noop = true;
+            if (requestsFromConsensus.length > 0)
+            {
             TOMMessage firstRequest = requestsFromConsensus[0];
             int requestCount = 0;
-            noop = true;
             for (TOMMessage request : requestsFromConsensus) {
 
                 if (request.getViewID() == SVController.getCurrentViewId()) {
@@ -352,7 +353,7 @@ public class ServiceReplica {
                 }
                 requestCount++;
             }
-
+            }
             // This happens when a consensus finishes but there are no requests to deliver
             // to the application. This can happen if a reconfiguration is issued and is the only
             // operation contained in the batch. The recoverer must be notified about this,

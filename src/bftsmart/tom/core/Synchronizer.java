@@ -841,12 +841,12 @@ public class Synchronizer {
         switch (msg.getType()) {
             case TOMUtil.STOP: { // message STOP
 
-                System.out.println("(Synchronizer.deliverTimeoutRequest) Last regency: " + lcManager.getLastReg() + ", next regency: " + lcManager.getNextReg());
+                System.out.println("(Synchronizer.deliverTimeoutRequest) Last regency: " + lcManager.getLastReg() + ", next regency: " + lcManager.getNextReg() + ", got regency: " + msg.getReg());
 
                 // this message is for the next leader change?
                 if (msg.getReg() == lcManager.getLastReg() + 1) {
 
-                    Logger.println("(Synchronizer.deliverTimeoutRequest) received regency change request");
+                    System.out.println("(Synchronizer.deliverTimeoutRequest) received regency change request");
 
                     TOMMessage[] requests = deserializeTOMMessages(msg.getPayload());
                     if (requests != null)
