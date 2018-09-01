@@ -95,7 +95,11 @@ public class Decision {
     public Epoch getDecisionEpoch() {
         return decisionEpoch;
     }
-    
+
+    public byte[] tryGetValue() {
+        return decisionEpoch.propValue;
+    }
+   
     /**
      * Sets the decided value
      * @return Decided Value
@@ -109,10 +113,10 @@ public class Decision {
     }
 
     public TOMMessage[] getDeserializedValue() {
-        while (deserializedValue == null) {
-            waitForPropose();
+        //while (deserializedValue == null) {
+         //   waitForPropose();
             deserializedValue = decisionEpoch.deserializedPropValue;
-        }
+        //}
         return deserializedValue;
     }
 

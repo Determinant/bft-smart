@@ -76,7 +76,6 @@ public final class DeliveryThread extends Thread {
      */
     public void delivery(Decision dec) {
         if (!containsGoodReconfig(dec)) {
-
             Logger.println("(DeliveryThread.delivery) Decision from consensus " + dec.getConsensusId() + " does not contain good reconfiguration");
             //set this decision as the last one from this replica
             tomLayer.setLastExec(dec.getConsensusId());
@@ -101,12 +100,14 @@ public final class DeliveryThread extends Thread {
 
     private boolean containsGoodReconfig(Decision dec) {
         TOMMessage[] decidedMessages = dec.getDeserializedValue();
+        if (decidedMessages != null) {
 
         for (TOMMessage decidedMessage : decidedMessages) {
             if (decidedMessage.getReqType() == TOMMessageType.RECONFIG
                     && decidedMessage.getViewID() == controller.getCurrentViewId()) {
                 return true;
             }
+        }
         }
         return false;
     }
@@ -261,9 +262,15 @@ public final class DeliveryThread extends Thread {
             Logger.println("(DeliveryThread.run) interpreting and verifying batched requests.");
 
             // obtain an array of requests from the decisions obtained
+            byte[] t = dec.tryGetValue();
+            if (t != null)
+            {
             BatchReader batchReader = new BatchReader(dec.getValue(),
                             controller.getStaticConf().getUseSignatures() == 1);
             requests = batchReader.deserialiseRequests(controller);
+            }
+            else
+                requests = new TOMMessage[0];
     	} else {
             Logger.println("(DeliveryThread.run) using cached requests from the propose.");
     	}

@@ -22,6 +22,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.TreeSet;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import bftsmart.communication.ServerCommunicationSystem;
 import bftsmart.reconfiguration.ServerViewController;
@@ -30,6 +31,8 @@ import bftsmart.tom.core.messages.TOMMessage;
 import bftsmart.tom.util.TOMUtil;
 import bftsmart.tom.core.Synchronizer;
 import java.util.Hashtable;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Set;
 
 /**
@@ -52,6 +55,7 @@ public class RequestsTimer {
     private ServerViewController controller; // Reconfiguration manager
     
     private Hashtable <Integer, Timer> stopTimers = new Hashtable<>();
+    private ReentrantLock tLock = new ReentrantLock();
     
     //private Storage st1 = new Storage(100000);
     //private Storage st2 = new Storage(10000);
@@ -221,20 +225,28 @@ public class RequestsTimer {
         
         stopTimer.schedule(stopTask, timeout);
         
+       tLock.lock();
        stopTimers.put(regency, stopTimer);
-
+       ArrayList<Integer> ks = Collections.list(stopTimers.keys());
+       for (Integer k: ks)
+            if (k < regency) stopSTOP(k);
+       tLock.unlock();
     }   
     
     public void stopSTOP(int regency){
         
+       tLock.lock();
         Timer stopTimer = stopTimers.remove(regency);
+       tLock.unlock();
         if (stopTimer != null) stopTimer.cancel();
 
     }
     
     public Set<Integer> getTimers() {
-        
-        return ((Hashtable <Integer,Timer>) stopTimers.clone()).keySet();
+        tLock.lock();
+        Set<Integer> t = ((Hashtable <Integer,Timer>) stopTimers.clone()).keySet();
+        tLock.unlock();
+        return t;
         
     }
     

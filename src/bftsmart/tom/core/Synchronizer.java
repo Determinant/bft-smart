@@ -284,7 +284,7 @@ public class Synchronizer {
     // Processes SYNC messages that were not process upon reception, because they were
     // ahead of the replica's expected regency
     private void processSYNC(byte[] payload, int regency) {
-        
+
         CertifiedDecision lastHighestCID = null;
         int currentCID = -1;
         HashSet<SignedObject> signedCollects = null;
