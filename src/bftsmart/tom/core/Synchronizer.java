@@ -243,7 +243,7 @@ public class Synchronizer {
 
                 lastValue = (byte[]) ois.readObject();
                 proof = (Set<ConsensusMessage>) ois.readObject();
-                msgCount.mac.getAndAdd(proof.size());
+                msgCount.cmac.getAndAdd(proof.size());
 
                 //TODO: Proof is missing!
             }
@@ -301,7 +301,6 @@ public class Synchronizer {
 
             lastHighestCID = (CertifiedDecision) ois.readObject();
             signedCollects = (HashSet<SignedObject>) ois.readObject();
-            msgCount.mac.getAndAdd(signedCollects.size());
             propose = (byte[]) ois.readObject();
             batchSize = ois.readInt();
 
@@ -425,7 +424,7 @@ public class Synchronizer {
         List<TOMMessage> messagesFromSTOP = lcManager.getRequestsFromSTOP();
         if (messagesFromSTOP != null) {
 
-            Logger.println("(Synchronizer.addRequestsToClientManager) Adding to client manager the requests contained in STOP messages");
+            System.out.println("(Synchronizer.addRequestsToClientManager) Adding to client manager the requests contained in STOP messages");
 
             for (TOMMessage m : messagesFromSTOP) {
                 tom.requestReceived(m);

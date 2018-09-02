@@ -51,6 +51,7 @@ public class ServerCommunicationSystem extends Thread {
         public AtomicLong sm = new AtomicLong(0);
         public AtomicLong nmac = new AtomicLong(0);
         public AtomicLong mac = new AtomicLong(0);
+        public AtomicLong cmac = new AtomicLong(0);
     };
     public static MsgCounter msgCount = new MsgCounter();
 

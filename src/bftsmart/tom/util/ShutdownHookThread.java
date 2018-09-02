@@ -60,6 +60,7 @@ public class ShutdownHookThread extends Thread {
         buffer.append("\nSM Msg: " + msgCount.sm);
         buffer.append("\nMAC: " + msgCount.mac);
         buffer.append("\nMAC bytes: " + msgCount.nmac);
+        buffer.append("\nVC MAC: " + msgCount.cmac);
         buffer.append("\nSig: " + TOMUtil.sigCount.num);
         buffer.append("\nSig bytes: " + TOMUtil.sigCount.bytes);
         buffer.append("\nCurrent time: " + sdf.format(new Date()));

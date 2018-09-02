@@ -517,10 +517,14 @@ public class ServerConnection {
                         if (result) {
                             SystemMessage sm = (SystemMessage) (new ObjectInputStream(new ByteArrayInputStream(data)).readObject());
                             sm.authenticated = (controller.getStaticConf().getUseMACs() == 1 && hasMAC == 1);
-                            if (sm instanceof ConsensusMessage || sm instanceof LCMessage)
+                            if (sm instanceof ConsensusMessage)
                             {
                                 msgCount.mac.getAndIncrement();
                                 msgCount.nmac.getAndAdd(receivedMac.length);
+                            }
+                            else if (sm instanceof LCMessage)
+                            {
+                                msgCount.cmac.getAndIncrement();
                             }
                             
                             if (sm.getSender() == remoteId) {
@@ -605,10 +609,14 @@ public class ServerConnection {
 
                         if (result) {
                             SystemMessage sm = (SystemMessage) (new ObjectInputStream(new ByteArrayInputStream(data)).readObject());
-                            if (sm instanceof ConsensusMessage || sm instanceof LCMessage)
+                            if (sm instanceof ConsensusMessage)
                             {
                                 msgCount.mac.getAndIncrement();
                                 msgCount.nmac.getAndAdd(receivedMac.length);
+                            }
+                            else if (sm instanceof LCMessage)
+                            {
+                                msgCount.cmac.getAndIncrement();
                             }
 
                             if (sm.getSender() == remoteId) {

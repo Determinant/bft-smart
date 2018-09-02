@@ -409,7 +409,10 @@ public class ServiceReplica {
             {
                 System.out.println("force a view change!");
                 execCount = 0;
-                tomLayer.requestsTimer.run_lc_protocol_();
+                tomLayer.requestsTimer.stopTimer();
+                tomLayer.requestsTimer.setShortTimeout(0);
+                tomLayer.requestsTimer.startTimer();
+                //tomLayer.requestsTimer.run_lc_protocol_();
             }
         }
     }
