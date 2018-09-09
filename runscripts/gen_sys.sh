@@ -4,7 +4,7 @@ n="$1"
 v=($(seq 0 $((n - 1))))
 view_string="$(IFS=','; echo "${v[*]}")"
 IFS="$OIFS"
-use_sig=1
+use_sig=0
 use_mac=1
 
 cat > config/system.config <<EOF
@@ -44,7 +44,7 @@ system.servers.num = $n
 system.servers.f = $(( (n - 1) / 3 ))
 
 #Timeout to asking for a client request
-system.totalordermulticast.timeout = 200000
+system.totalordermulticast.timeout = 20000000
 
 
 #Maximum batch size (in number of messages)
