@@ -57,7 +57,16 @@ public class Storage {
     public long getMax(boolean limit){
         return computeMax(values,limit);
     }
-    
+
+    public long getTotal(){
+        java.util.Arrays.sort(values);
+        long t = 0;
+        for(int i = 0; i < values.length;i++){
+            t = t + values[i];
+        }
+        return t;
+    }
+   
     private long computeAverage(long[] values, boolean percent){
         java.util.Arrays.sort(values);
         int limit = 0;
@@ -68,7 +77,7 @@ public class Storage {
         for(int i = limit; i < values.length - limit;i++){
             count = count + values[i];
         }
-        return count/(values.length - 2*limit);
+        return count/(getCount() - 2*limit);
     }
     
     private long computeMax(long[] values, boolean percent){

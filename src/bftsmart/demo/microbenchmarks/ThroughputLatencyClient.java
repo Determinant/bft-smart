@@ -120,21 +120,21 @@ public class ThroughputLatencyClient {
 
             int req = 0;
             
-            for (int i = 0; i < numberOfOps / 2; i++, req++) {
-                if (verbose) System.out.print("Sending req " + req + "...");
-                if (dos) {
-                    reqId = proxy.generateRequestId((readOnly) ? TOMMessageType.UNORDERED_REQUEST : TOMMessageType.ORDERED_REQUEST); 
-                    proxy.TOMulticast(request, reqId, (readOnly) ? TOMMessageType.UNORDERED_REQUEST : TOMMessageType.ORDERED_REQUEST); 
-                }
-                else
-                	if(readOnly)
-                		reply = proxy.invokeUnordered(request);
-                	else
-                		reply = proxy.invokeOrdered(request);
-                if (verbose) System.out.println(" sent!");
+            //for (int i = 0; i < numberOfOps / 2; i++, req++) {
+            //    if (verbose) System.out.print("Sending req " + req + "...");
+            //    if (dos) {
+            //        reqId = proxy.generateRequestId((readOnly) ? TOMMessageType.UNORDERED_REQUEST : TOMMessageType.ORDERED_REQUEST); 
+            //        proxy.TOMulticast(request, reqId, (readOnly) ? TOMMessageType.UNORDERED_REQUEST : TOMMessageType.ORDERED_REQUEST); 
+            //    }
+            //    else
+            //    	if(readOnly)
+            //    		reply = proxy.invokeUnordered(request);
+            //    	else
+            //    		reply = proxy.invokeOrdered(request);
+            //    if (verbose) System.out.println(" sent!");
 
-                if (verbose && (req % 1000 == 0)) System.out.println(this.id + " // " + req + " operations sent!");
-            }
+            //    if (verbose && (req % 1000 == 0)) System.out.println(this.id + " // " + req + " operations sent!");
+            //}
 
             Storage st = new Storage(numberOfOps / 2);
 
@@ -173,8 +173,25 @@ public class ThroughputLatencyClient {
                 System.out.println(this.id + " // Average time for " + numberOfOps / 2 + " executions (all samples) = " + st.getAverage(false) / 1000 + " us ");
                 System.out.println(this.id + " // Standard desviation for " + numberOfOps / 2 + " executions (all samples) = " + st.getDP(false) / 1000 + " us ");
                 System.out.println(this.id + " // Maximum time for " + numberOfOps / 2 + " executions (all samples) = " + st.getMax(false) / 1000 + " us ");
+                System.out.println(this.id + " // Total time = " + st.getTotal() / 1000 + " us ");
+                System.out.println(this.id + " // Finished ops  = " + st.getCount());
             }
-            
+
+            for (int i = 0; i < numberOfOps / 2; i++, req++) {
+                if (verbose) System.out.print("Sending req " + req + "...");
+                if (dos) {
+                    reqId = proxy.generateRequestId((readOnly) ? TOMMessageType.UNORDERED_REQUEST : TOMMessageType.ORDERED_REQUEST); 
+                    proxy.TOMulticast(request, reqId, (readOnly) ? TOMMessageType.UNORDERED_REQUEST : TOMMessageType.ORDERED_REQUEST); 
+                }
+                else
+                	if(readOnly)
+                		reply = proxy.invokeUnordered(request);
+                	else
+                		reply = proxy.invokeOrdered(request);
+                if (verbose) System.out.println(" sent!");
+
+                if (verbose && (req % 1000 == 0)) System.out.println(this.id + " // " + req + " operations sent!");
+            }
             //proxy.close();
         }
     }
