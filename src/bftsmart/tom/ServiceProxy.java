@@ -191,9 +191,9 @@ public class ServiceProxy extends TOMSender {
 					getViewManager().getCurrentViewId(), requestType);
 			sm.setReplyServer(replyServer);
 
-			TOMulticast(sm);
+			TOMulticast0(sm);
 		}else{
-			TOMulticast(request, reqId, operationId, reqType);
+			TOMulticast0(request, reqId, operationId, reqType);
 		}
 
 		Logger.println("Sending request (" + reqType + ") with reqId=" + reqId);
@@ -347,7 +347,7 @@ public class ServiceProxy extends TOMSender {
 					
 					for (int i = 0; i < replies.length; i++) {
 
-						if ((i != pos || getViewManager().getCurrentViewN() == 1) && replies[i] != null
+						if ((/*i != pos*/ true || getViewManager().getCurrentViewN() == 1) && replies[i] != null
 								&& (comparator.compare(replies[i].getContent(), reply.getContent()) == 0)) {
 							sameContent++;
 							if (sameContent >= replyQuorum) {

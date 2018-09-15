@@ -132,6 +132,10 @@ public abstract class TOMSender implements ReplyReceiver {
 		cs.send(useSignatures, this.viewController.getCurrentViewProcesses(), sm);
 	}
 
+	public void TOMulticast0(TOMMessage sm) {
+		cs.send(useSignatures, new int[]{this.viewController.getCurrentViewProcesses()[0]}, sm);
+	}
+
 	/**
 	 * Multicast data to the group of replicas
 	 *
@@ -147,6 +151,12 @@ public abstract class TOMSender implements ReplyReceiver {
 
 	public void TOMulticast(byte[] m, int reqId, int operationId, TOMMessageType reqType) {
 		cs.send(useSignatures, viewController.getCurrentViewProcesses(),
+				new TOMMessage(me, session, reqId, operationId, m, viewController.getCurrentViewId(),
+						reqType));
+	}
+
+	public void TOMulticast0(byte[] m, int reqId, int operationId, TOMMessageType reqType) {
+		cs.send(useSignatures, new int[]{viewController.getCurrentViewProcesses()[0]},
 				new TOMMessage(me, session, reqId, operationId, m, viewController.getCurrentViewId(),
 						reqType));
 	}
