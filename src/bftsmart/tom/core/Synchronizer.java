@@ -304,6 +304,11 @@ public class Synchronizer {
             ois = new ObjectInputStream(bis);
 
             lastHighestCID = (CertifiedDecision) ois.readObject();
+            for (ConsensusMessage p: lastHighestCID.getConsMessages()) {
+                HashMap<Integer, byte[]> p0 = (HashMap<Integer, byte[]>)p.getProof();
+                msgCount.cmac.getAndAdd(p0.size());
+            }
+
             signedCollects = (HashSet<SignedObject>) ois.readObject();
             propose = (byte[]) ois.readObject();
             batchSize = ois.readInt();
