@@ -204,6 +204,7 @@ public class NettyClientServerCommunicationSystemServerSide extends SimpleChanne
 		//produce signature if necessary (never in the current version)
 		if (sm.signed) {
 			//******* EDUARDO BEGIN **************//
+            // Ted: disable client signatures
 			byte[] data2 = new byte[0]; //TOMUtil.signMessage(controller.getStaticConf().getRSAPrivateKey(), data);
 			//******* EDUARDO END **************//
 			sm.serializedMessageSignature = data2;

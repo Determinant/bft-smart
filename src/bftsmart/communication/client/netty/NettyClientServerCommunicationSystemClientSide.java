@@ -86,6 +86,7 @@ public class NettyClientServerCommunicationSystemClientSide extends SimpleChanne
 			this.controller = controller;
 			//this.st = new Storage(BENCHMARK_PERIOD);
 			this.rl = new ReentrantReadWriteLock();
+            // Ted: disable client signatures
 			signatureLength = 0; //TOMUtil.getSignatureSize(controller);
 
 			ChannelFuture future = null;
@@ -397,6 +398,7 @@ public class NettyClientServerCommunicationSystemClientSide extends SimpleChanne
 	}
 
 	public byte[] signMessage(PrivateKey key, byte[] message) {
+        // Ted: disable client signatures
         return new byte[0];
 		////long startTime = System.nanoTime();
 		//try {

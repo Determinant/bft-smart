@@ -39,6 +39,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
+import java.util.HashMap;
 import org.apache.commons.codec.binary.Base64;
 
 /**
@@ -243,7 +244,10 @@ public class Synchronizer {
 
                 lastValue = (byte[]) ois.readObject();
                 proof = (Set<ConsensusMessage>) ois.readObject();
-                msgCount.cmac.getAndAdd(proof.size());
+                for (ConsensusMessage p: proof) {
+                    HashMap<Integer, byte[]> p0 = (HashMap<Integer, byte[]>)p.getProof();
+                    msgCount.cmac.getAndAdd(p0.size());
+                }
 
                 //TODO: Proof is missing!
             }
@@ -424,7 +428,7 @@ public class Synchronizer {
         List<TOMMessage> messagesFromSTOP = lcManager.getRequestsFromSTOP();
         if (messagesFromSTOP != null) {
 
-            System.out.println("(Synchronizer.addRequestsToClientManager) Adding to client manager the requests contained in STOP messages");
+            Logger.println("(Synchronizer.addRequestsToClientManager) Adding to client manager the requests contained in STOP messages");
 
             for (TOMMessage m : messagesFromSTOP) {
                 tom.requestReceived(m);
